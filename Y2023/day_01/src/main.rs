@@ -1,22 +1,14 @@
 use common::file_access;
-use regex::Regex;
 
 fn part_1(input: Vec<String>) {
-    let left_int_regex = Regex::new(r"^\D*(\d)").unwrap();
-    let right_int_regex = Regex::new(r"(\d)\D*$").unwrap();
-
     let sum = input.iter().fold(0, |sum, line| {
-        let left_int_str = left_int_regex.captures(line)
-                                     .unwrap()
-                                     .get(1)
-                                     .unwrap()
-                                     .as_str();
-        let right_int_str = right_int_regex.captures(line)
-                                     .unwrap()
-                                     .get(1)
-                                     .unwrap()
-                                     .as_str();
-        let line_value = format!("{}{}", left_int_str, right_int_str);
+        let mut digits = String::from(line);
+        digits.retain(|c| c.is_numeric());
+
+        let left_int = digits.chars().next().unwrap();
+        let right_int = digits.chars().rev().next().unwrap();
+
+        let line_value = format!("{}{}", left_int, right_int);
 
         return sum + line_value.parse::<i32>().unwrap();
     });
