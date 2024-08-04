@@ -1,12 +1,10 @@
-use common::file_access;
-
 struct NumMatch<'a> {
     num: &'a str,
     val: u32,
 }
 
-fn sum_first_last_digits(input: Vec<String>, matchers: Vec<NumMatch>) -> String {
-    let sum = input.iter().fold(0, |sum, line| {
+fn sum_first_last_digits(input: &str, matchers: Vec<NumMatch>) -> String {
+    let sum = input.lines().fold(0, |sum, line| {
         let mut left: Option<u32> = None;
         let mut right: Option<u32> = None;
 
@@ -25,7 +23,7 @@ fn sum_first_last_digits(input: Vec<String>, matchers: Vec<NumMatch>) -> String 
     return sum.to_string();
 }
 
-fn part_1(input: &Vec<String>) -> String {
+fn part_1(input: &str) -> String {
     let matchers = vec![
         NumMatch { num: "1", val: 1 },
         NumMatch { num: "2", val: 2 },
@@ -37,10 +35,11 @@ fn part_1(input: &Vec<String>) -> String {
         NumMatch { num: "8", val: 8 },
         NumMatch { num: "9", val: 9 },
     ];
-    return sum_first_last_digits(input.to_owned(), matchers);
+
+    return sum_first_last_digits(input, matchers);
 }
 
-fn part_2(input: &Vec<String>) -> String {
+fn part_2(input: &str) -> String {
     let matchers = vec![
         NumMatch { num: "1", val: 1 },
         NumMatch { num: "2", val: 2 },
@@ -79,11 +78,11 @@ fn part_2(input: &Vec<String>) -> String {
             val: 9,
         },
     ];
-    return sum_first_last_digits(input.to_owned(), matchers);
+
+    return sum_first_last_digits(input, matchers);
 }
 
-fn main() {
-    let input = file_access::read_lines("../inputs/day_01.txt");
-    println!("Solution to part 1: {}", part_1(&input));
-    println!("Solution to part 2: {}", part_2(&input));
+pub fn run(input: &str) {
+    println!("Part 1 solution: {}", part_1(input));
+    println!("Part 2 solution: {}", part_2(input));
 }
