@@ -1,68 +1,85 @@
 use common::file_access;
 
-fn sum_first_last_digits(input: Vec<String>) -> String {
+struct NumMatch<'a> {
+    num: &'a str,
+    val: u32,
+}
+
+fn sum_first_last_digits(input: Vec<String>, matchers: Vec<NumMatch>) -> String {
     let sum = input.iter().fold(0, |sum, line| {
-        let mut digits = String::from(line);
-        digits.retain(|c| c.is_numeric());
+        let mut left: Option<u32> = None;
+        let mut right: Option<u32> = None;
 
-        let left_int = digits.chars().next().unwrap();
-        let right_int = digits.chars().rev().next().unwrap();
+        for (i, _) in line.chars().enumerate() {
+            for m in matchers.iter() {
+                if line[i..].starts_with(m.num) {
+                    left = left.or(Some(m.val));
+                    right = Some(m.val);
+                }
+            }
+        }
 
-        let line_value = format!("{}{}", left_int, right_int);
-
-        return sum + line_value.parse::<i32>().unwrap();
+        return sum + left.unwrap() * 10 + right.unwrap();
     });
 
     return sum.to_string();
 }
 
 fn part_1(input: &Vec<String>) -> String {
-    return sum_first_last_digits(input.to_vec());
-}
-
-static NUM_WORDS: [&str; 9] = [
-    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-];
-
-fn replace_written_digits(number: String, before: String) -> String {
-    // Immediately return where number is fully consumed.
-    if number.chars().count() == 0 {
-        return before;
-    }
-
-    // Check for any NUM_WORDS at the start of the string and replace with
-    // the equivalent digit (index + 1).
-    let pos_num_word = NUM_WORDS
-        .iter()
-        .enumerate()
-        .find(|&nw| number.starts_with(nw.1));
-    if pos_num_word.is_some() {
-        let num_word = pos_num_word.unwrap();
-        let word_length = num_word.1.chars().count();
-        return replace_written_digits(
-            number[word_length..].to_string(),
-            format!("{before}{}", num_word.0 + 1),
-        );
-    }
-
-    let first_char = number.chars().next().unwrap();
-    if first_char.is_numeric() {
-        return replace_written_digits(number[1..].to_string(), format!("{before}{first_char}"));
-    }
-
-    // All other conditions unmet, so move on.
-    return replace_written_digits(number[1..].to_string(), before);
+    let matchers = vec![
+        NumMatch { num: "1", val: 1 },
+        NumMatch { num: "2", val: 2 },
+        NumMatch { num: "3", val: 3 },
+        NumMatch { num: "4", val: 4 },
+        NumMatch { num: "5", val: 5 },
+        NumMatch { num: "6", val: 6 },
+        NumMatch { num: "7", val: 7 },
+        NumMatch { num: "8", val: 8 },
+        NumMatch { num: "9", val: 9 },
+    ];
+    return sum_first_last_digits(input.to_owned(), matchers);
 }
 
 fn part_2(input: &Vec<String>) -> String {
-    let numeric_lines: Vec<String> = input
-        .iter()
-        .map(|line| {
-            return replace_written_digits(line.to_string(), String::from(""));
-        })
-        .collect();
-
-    return sum_first_last_digits(numeric_lines.to_vec());
+    let matchers = vec![
+        NumMatch { num: "1", val: 1 },
+        NumMatch { num: "2", val: 2 },
+        NumMatch { num: "3", val: 3 },
+        NumMatch { num: "4", val: 4 },
+        NumMatch { num: "5", val: 5 },
+        NumMatch { num: "6", val: 6 },
+        NumMatch { num: "7", val: 7 },
+        NumMatch { num: "8", val: 8 },
+        NumMatch { num: "9", val: 9 },
+        NumMatch { num: "one", val: 1 },
+        NumMatch { num: "two", val: 2 },
+        NumMatch {
+            num: "three",
+            val: 3,
+        },
+        NumMatch {
+            num: "four",
+            val: 4,
+        },
+        NumMatch {
+            num: "five",
+            val: 5,
+        },
+        NumMatch { num: "six", val: 6 },
+        NumMatch {
+            num: "seven",
+            val: 7,
+        },
+        NumMatch {
+            num: "eight",
+            val: 8,
+        },
+        NumMatch {
+            num: "nine",
+            val: 9,
+        },
+    ];
+    return sum_first_last_digits(input.to_owned(), matchers);
 }
 
 fn main() {
