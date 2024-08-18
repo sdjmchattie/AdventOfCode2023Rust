@@ -19,7 +19,7 @@ fn sum_first_last_digits(input: &str, matchers: &Matchers) -> String {
         return sum + left.unwrap() * 10 + right;
     });
 
-    return sum.to_string();
+    sum.to_string()
 }
 
 pub fn run(input: &str) {
