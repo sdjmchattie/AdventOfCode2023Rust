@@ -42,7 +42,7 @@ fn part_2(input: &str) -> i32 {
     }).sum()
 }
 
-pub fn run(input: &str) { let part1 = "Hello";
+pub fn run(input: &str) {
     println!("Part 1 solution: {}", part_1(input));
     println!("Part 2 solution: {}", part_2(input));
 }
